@@ -24,10 +24,13 @@ spec:
         {{- if .Values.controller.podLabels }}
         {{- toYaml .Values.controller.podLabels | nindent 8 }}
         {{- end }}
-      {{- if .Values.controller.podAnnotations }}
       annotations:
+        {{- if .Values.controller.serviceAccount.annotations }}
+        checksum/config: {{ tpl ( .Values.controller.serviceAccount.annotations | toYaml ) . | sha256sum }}
+        {{- end }}
+        {{- if .Values.controller.podAnnotations }}
         {{- tpl ( .Values.controller.podAnnotations | toYaml ) . | nindent 8 }}
-      {{- end }}
+        {{- end }}
     spec:
       nodeSelector:
         kubernetes.io/os: linux
